@@ -1,0 +1,7 @@
+.cdk-venv/
+cdk.out/
+__pycache__/
+*.pyc
+.env
+models_manifest.json
+model_spec.json
