@@ -5,3 +5,6 @@ __pycache__/
 .env
 models_manifest.json
 model_spec.json
+cdk.context.json
+model_spec.json
+models_manifest.json
