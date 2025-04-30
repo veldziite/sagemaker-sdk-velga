@@ -1,0 +1,40 @@
+image: python:3.11
+
+stages:
+  - bootstrap
+  - deploy_domain
+  - deploy_users
+  - deploy_model
+
+before_script:
+  - python -m venv .cdk-venv
+  - source .cdk-venv/bin/activate
+  - pip install -r requirements.txt
+  - pip install awscli
+  - npm install -g aws-cdk
+
+bootstrap:
+  stage: bootstrap
+  script:
+    - source .cdk-venv/bin/activate
+    - cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_DEFAULT_REGION
+
+deploy_domain:
+  stage: deploy_domain
+  script:
+    - source .cdk-venv/bin/activate
+    - cdk deploy SageMakerStudioDomainStack --require-approval never
+
+deploy_users:
+  stage: deploy_users
+  script:
+    - source .cdk-venv/bin/activate
+    - cdk deploy StudioUserProfileStack --require-approval never
+  needs: [deploy_domain]
+
+deploy_model:
+  stage: deploy_model
+  script:
+    - source .cdk-venv/bin/activate
+    - cdk deploy PreTrainedModelStack --require-approval never
+  needs: [deploy_domain]
